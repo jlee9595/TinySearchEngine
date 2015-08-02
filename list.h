@@ -30,6 +30,7 @@ typedef struct List {
 } List;
 
 // ---------------- Public Variables
+extern List Weblist;
 
 // ---------------- Prototypes/Macros
 

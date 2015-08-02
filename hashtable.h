@@ -29,6 +29,8 @@ typedef struct HashTable {
 } HashTable;
 
 // ---------------- Public Variables
+extern HashTable WebVisited;
+
 
 // ---------------- Prototypes/Macros
 
