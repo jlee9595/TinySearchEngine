@@ -109,7 +109,7 @@ int GetWebPage(WebPage* page)
     curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
 
     /* Add any additional options here */
-
+	curl_easy_setopt(curl_handle, CURLOPT_FAILONERROR, 1);
     // get the page
     res = curl_easy_perform(curl_handle);
 

@@ -50,7 +50,8 @@ int CrawlPage(WebPage *page) {
 	char *html = page->html;
 	char *base_url = page->url;
 	while ((pos = GetNextURL(html, pos, base_url, &result)) > 0) {
-		if (InHashTable(result) == 0 && strstr(result, "http://old-www.cs.dartmouth.edu/~cs50/tse/") != NULL) {
+		if (InHashTable(result) == 0 && strstr(result, "http://old-www.cs.dartmouth.edu/~cs50/tse/") != NULL && NormalizeURL(result) == 1) {
+			printf("Parser found link - %s\n", result);
 			AddToHashTable(result);
 			WebPage *newpage;
 			if ((newpage = calloc(1, sizeof(WebPage))) == NULL) {
@@ -58,9 +59,13 @@ int CrawlPage(WebPage *page) {
 			}
 			newpage->url = result;
 			newpage->depth = currentdepth + 1;
-			GetWebPage(newpage);
-			AppendList(newpage);
+			if (GetWebPage(newpage) != 0) {
+				AppendList(newpage);
+			}
 		}
+	//	else {
+	//		free(result);
+	//	}
 	}
 	return 0;
 }			
@@ -100,6 +105,7 @@ int main(int argc, char* argv[])
 		printf("Max depth exceeds maximum, please try again and enter a max depth no higher than 4");
 	}
 
+
     // init curl
 	curl_global_init(CURL_GLOBAL_ALL);
 
@@ -135,13 +141,18 @@ int main(int argc, char* argv[])
 			WriteFile(page, argv[2], filenumber);
 			filenumber++;
         	// extract urls from webpage
-        		printf("Crawling - %s", page->url);
-			CrawlPage(page);
+			if (page->depth < maxDepth) {
+				printf("Crawling - %s\n", page->url);	
+				CrawlPage(page);
+			}
 		}
 		PopList();
 	}
     // cleanup curl
-    curl_global_cleanup();
-
-    return 0;
+	curl_global_cleanup();
+	//free(page->url);
+	//free(page->html);
+//	free(page);
+	//FreeHashTable();
+	return 0;
 }

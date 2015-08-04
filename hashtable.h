@@ -49,4 +49,5 @@ int AddToHashTable(char *URL);
 
 int InHashTable(char *URL);
 
+int FreeHashTable();
 #endif // HASHTABLE_H

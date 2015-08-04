@@ -94,6 +94,23 @@ int InHashTable(char *URL) {
 	return 0;
 }
 
+int FreeHashTable() {
+	HashTableNode *currentNode;
+	HashTableNode *nextNode;
+	int currentBucket = 0;
+	while (currentBucket <=  MAX_HASH_SLOT) {
+		currentNode = URLsVisited.table[currentBucket];
+		while (currentNode != NULL) {
+			nextNode = currentNode->next;
+			free(currentNode->url);
+			free(currentNode);
+			currentNode = nextNode;
+		}
+		currentBucket++;
+	}
+	return 0;
+}
+
 //int main() {
 //	AddToHashTable("dartmouth.edu");
 //	if (InHashTable("dartmouth.edu") == 1) {
