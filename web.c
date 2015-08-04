@@ -26,7 +26,6 @@
                                              // memcpy, strnlen, strncpy,
                                              // strcmp, strdup, strndup, strcat,
                                              // strpbrk
-
 #include <curl/curl.h>                       // curl functionality
 
 // ---------------- Local includes  e.g., "file.h"
@@ -227,7 +226,7 @@ int GetNextURL(char *html, int pos, char *base_url, char **result)
     // have a good link now
     if(relative) {                           // need to fixup relative links
         *result = FixupRelativeURL(base_url, href, end - href);
-        if(!*result) { return -2; }
+        if(!*result) { return -3; }
     } else {
         // create new buffer
         *result = calloc(end-href+1, sizeof(char));

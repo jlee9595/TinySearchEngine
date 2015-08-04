@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <curl/curl.h>                       // curl functionality
 #include <string.h>
+#include <strings.h>
 
 // ---------------- Local includes  e.g., "file.h"
 #include "common.h"                          // common functionality
@@ -30,7 +31,6 @@
 #include "list.h"                            // webpage list functionality
 #include "hashtable.h"                       // hashtable functionality
 #include "utils.h"                           // utility stuffs
-
 // ---------------- Constant definitions
 
 // ---------------- Macro definitions
@@ -44,21 +44,43 @@
 /* ========================================================================== */
 
 int CrawlPage(WebPage *page) {
+	int currentdepth = page->depth;
 	int pos = 0;
 	char *result;
-	char *html = page->url;
-	char *base_url = page->html;
+	char *html = page->html;
+	char *base_url = page->url;
 	while ((pos = GetNextURL(html, pos, base_url, &result)) > 0) {
-		if (InHashTable(result) == 0) {
+		if (InHashTable(result) == 0 && strstr(result, "http://old-www.cs.dartmouth.edu/~cs50/tse/") != NULL) {
 			AddToHashTable(result);
-			WebPage *newpage = calloc(1, sizeof(WebPage));
+			WebPage *newpage;
+			if ((newpage = calloc(1, sizeof(WebPage))) == NULL) {
+				return 1;
+			}
 			newpage->url = result;
+			newpage->depth = currentdepth + 1;
 			GetWebPage(newpage);
 			AppendList(newpage);
 		}
 	}
-	PopList();
+	return 0;
 }			
+
+int WriteFile(WebPage *page, char *targetdirectory, int filenumber) {
+	char file[10000];
+	char numconverted[10000];
+	strcpy(file, targetdirectory);
+	sprintf(numconverted, "%d", filenumber);
+	strcat(file, numconverted);
+	FILE *fp;
+	fp = fopen(file, "w");
+	fprintf(fp, page->url);
+	fprintf(fp, "\n"); 
+	fprintf(fp, "%d", page->depth);
+	fprintf(fp, "\n");
+	fputs(page->html, fp);
+	fclose(fp);
+	return 0;
+}
 
 int main(int argc, char* argv[])
 {
@@ -81,44 +103,43 @@ int main(int argc, char* argv[])
     // init curl
 	curl_global_init(CURL_GLOBAL_ALL);
 
-	//initialiaze data structures/variables
-	List URLList;
-	HashTable URLsVisited;
+	//initialize data structures/variables
+	//List URLList;
+	//HashTable URLsVisited;
 	int maxDepth = atoi(argv[3]);
 	WebPage *page;
-	char *URLToBeVisited;
+	int filenumber = 1;
 
     // setup seed page
     	page = calloc(1, sizeof(WebPage));
 	page->url = argv[1];
-	page->depth = maxDepth;
+	page->depth = 0;
     // get seed webpage
 	GetWebPage(page);
-
+	
     // write seed file
-	FILE *fp;
-
-	fp = fopen(strcat(argv[2], "1"), "w");
-	fprintf(fp, strcat(page->url, "\n"));
-	fprintf(fp,"%d", page->depth);
-	fprintf(fp, "\n");
-	fprintf(fp, page->html);
-	fclose(fp);
+	WriteFile(page, argv[2], filenumber);
+	filenumber++;
     // add seed page to hashtable
 	AddToHashTable(page->url);
 
     // extract urls from seed page
 	CrawlPage(page);
-	printf(WebList.page
     // while there are urls to crawl
-        // get next url from list
-
-        // get webpage for url
-
-        // write page file
-
-        // extract urls from webpage
-
+	while (URLList.head != NULL) {
+		if (URLList.head->page->depth <=  maxDepth) {
+        	// get next url from list
+			page = URLList.head->page;
+				
+ 	       // write page file
+			WriteFile(page, argv[2], filenumber);
+			filenumber++;
+        	// extract urls from webpage
+        		printf("Crawling - %s", page->url);
+			CrawlPage(page);
+		}
+		PopList();
+	}
     // cleanup curl
     curl_global_cleanup();
 

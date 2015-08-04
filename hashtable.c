@@ -86,7 +86,7 @@ int InHashTable(char *URL) {
 	HashTableNode *currentNode;
 	currentNode = URLsVisited.table[bucket];
 	while (currentNode != NULL) {
-		if (currentNode->url == URL) {
+		if (strcmp(currentNode->url, URL) == 0) {
 			return 1;
 		}
 		currentNode = currentNode->next;

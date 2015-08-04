@@ -29,7 +29,7 @@ typedef struct HashTable {
 } HashTable;
 
 // ---------------- Public Variables
-extern HashTable WebVisited;
+extern HashTable URLsVisited;
 
 
 // ---------------- Prototypes/Macros
@@ -44,5 +44,9 @@ extern HashTable WebVisited;
  *     http://www.burtleburtle.net/bob/hash/doobs.html
  */
 unsigned long JenkinsHash(const char *str, unsigned long mod);
+
+int AddToHashTable(char *URL);
+
+int InHashTable(char *URL);
 
 #endif // HASHTABLE_H

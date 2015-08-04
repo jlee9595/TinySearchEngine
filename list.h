@@ -30,8 +30,9 @@ typedef struct List {
 } List;
 
 // ---------------- Public Variables
-extern List Weblist;
+extern List URLList;
 
 // ---------------- Prototypes/Macros
-
+int AppendList(WebPage *page);
+WebPage *PopList();
 #endif // LIST_H
