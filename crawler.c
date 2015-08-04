@@ -103,6 +103,7 @@ int main(int argc, char* argv[])
 	//is the maximum depth in the right range?	
 	if (atoi(argv[3]) > MAX_DEPTH) {
 		printf("Max depth exceeds maximum, please try again and enter a max depth no higher than 4");
+		exit(0);
 	}
 
 
@@ -121,8 +122,10 @@ int main(int argc, char* argv[])
 	page->url = argv[1];
 	page->depth = 0;
     // get seed webpage
-	GetWebPage(page);
-	
+	if (GetWebPage(page) == 0) {
+		printf("Seed page not valid, please try again");
+		exit(0);
+	}
     // write seed file
 	WriteFile(page, argv[2], filenumber);
 	filenumber++;
