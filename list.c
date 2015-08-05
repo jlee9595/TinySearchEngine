@@ -63,9 +63,9 @@ WebPage *PopList() {
 
 	if (URLList.head)
 		URLList.head->prev = NULL;
-
+	free(tmp);
+	
 	return page;
-
 }
 
 //int main() {

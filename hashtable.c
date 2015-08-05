@@ -95,16 +95,13 @@ int InHashTable(char *URL) {
 }
 
 int FreeHashTable() {
-	HashTableNode *currentNode;
-	HashTableNode *nextNode;
 	int currentBucket = 0;
 	while (currentBucket <=  MAX_HASH_SLOT) {
-		currentNode = URLsVisited.table[currentBucket];
+		HashTableNode *currentNode = URLsVisited.table[currentBucket];
 		while (currentNode != NULL) {
-			nextNode = currentNode->next;
-			free(currentNode->url);
-			free(currentNode);
-			currentNode = nextNode;
+			//HashTableNode *tempNode = currentNode;
+			currentNode = currentNode->next;
+			//free(tempNode);	
 		}
 		currentBucket++;
 	}

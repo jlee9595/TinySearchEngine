@@ -51,7 +51,6 @@ int CrawlPage(WebPage *page) {
 	char *base_url = page->url;
 	while ((pos = GetNextURL(html, pos, base_url, &result)) > 0) {
 		if (InHashTable(result) == 0 && strstr(result, "http://old-www.cs.dartmouth.edu/~cs50/tse/") != NULL && NormalizeURL(result) == 1) {
-		//	printf("Parser found link - %s\n", result);
 			AddToHashTable(result);
 			WebPage *newpage;
 			if ((newpage = calloc(1, sizeof(WebPage))) == NULL) {
@@ -60,11 +59,10 @@ int CrawlPage(WebPage *page) {
 			newpage->url = result;
 			newpage->depth = currentdepth + 1;
 			AppendList(newpage);
-			
 		}
-	//	else {
-	//		free(result);
-	//	}
+		else {
+			free(result);
+		}
 	}
 	return 0;
 }			
@@ -110,12 +108,9 @@ int main(int argc, char* argv[])
 	curl_global_init(CURL_GLOBAL_ALL);
 
 	//initialize data structures/variables
-	//List URLList;
-	//HashTable URLsVisited;
 	int maxDepth = atoi(argv[3]);
 	WebPage *page;
 	int filenumber = 1;
-	WebPage *URLToBeVisited;
     // setup seed page
     	page = calloc(1, sizeof(WebPage));
 	page->url = argv[1];
@@ -137,21 +132,22 @@ int main(int argc, char* argv[])
 	}
     // while there are urls to crawl
 	while (URLList.head != NULL) {
-		URLToBeVisited = PopList();
+		WebPage *URLToBeVisited = PopList();
 		if (GetWebPage(URLToBeVisited) != 0) {
 			WriteFile(URLToBeVisited, argv[2], filenumber);
 			filenumber++;
 			if (URLToBeVisited->depth < maxDepth) {
-				printf("Crawling - %s\n", URLToBeVisited->url);	
 				CrawlPage(URLToBeVisited);
 			}
 		}
+		free(URLToBeVisited->html);
+		free(URLToBeVisited);
+		//sleep(INTERVAL_PER_FETCH);
 	}
     // cleanup curl
 	curl_global_cleanup();
-	//free(page->url);
-	//free(page->html);
-//	free(page);
-	//FreeHashTable();
+	free(page->html);
+	free(page);
+	FreeHashTable();
 	return 0;
 }

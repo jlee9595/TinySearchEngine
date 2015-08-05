@@ -1,0 +1,26 @@
+Crawler Test Log
+
+Test 1: Run with bad url
+Seed page not valid, please try again
+
+Test 2: Run with bad directory
+Directory not found, please enter an existing and writable target directory
+
+Test 3: Run with invalid depth
+Max depth exceeds maximum, please try again and enter a max depth no higher than 4
+
+For the following tests, use url http://old-www.cs.dartmouth.edu/~cs50/tse/ and directory ./target/
+
+Test 4: Run with valid parameters at depth 0
+Number of files produced: 1
+
+Test 5: Run with valid parameters at depth 1
+Number of files produced: 7
+
+Test 6: Run with valid parameters at depth 2
+Number of files produced: 1746
+
+Test 7: Run with valid parameters at depth 3
+Number of files produced: 2989
+
+The files produced by Test 7 have been left for inspection.
