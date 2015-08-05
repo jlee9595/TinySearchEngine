@@ -142,9 +142,9 @@ int main(int argc, char* argv[])
 		}
 		free(URLToBeVisited->html);
 		free(URLToBeVisited);
-		//sleep(INTERVAL_PER_FETCH);
+		sleep(INTERVAL_PER_FETCH);
 	}
-    // cleanup curl
+    // Final cleanup
 	curl_global_cleanup();
 	free(page->html);
 	free(page);
