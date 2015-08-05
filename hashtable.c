@@ -59,6 +59,7 @@ unsigned long JenkinsHash(const char *str, unsigned long mod)
     return hash % mod;
 }
 
+// Add the input URL to the hash table
 int AddToHashTable(char *URL) {
 	HashTableNode *node;
 	if ((node = calloc(1, sizeof(HashTableNode))) == NULL) {
@@ -81,6 +82,7 @@ int AddToHashTable(char *URL) {
 	return 0;
 }
 
+//Check if the input url is inside the Hash Table
 int InHashTable(char *URL) {
 	unsigned long bucket = JenkinsHash(URL, MAX_HASH_SLOT);
 	HashTableNode *currentNode;
@@ -94,6 +96,7 @@ int InHashTable(char *URL) {
 	return 0;
 }
 
+// Free the memory allocated to the hash table nodes
 int FreeHashTable() {
 	int currentBucket = 0;
 	while (currentBucket <=  MAX_HASH_SLOT) {

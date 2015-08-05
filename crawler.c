@@ -43,6 +43,8 @@
 
 /* ========================================================================== */
 
+
+//Crawl the page searching for URLs and adding them to the List if they havne't been visited yet
 int CrawlPage(WebPage *page) {
 	int currentdepth = page->depth;
 	int pos = 0;
@@ -67,12 +69,14 @@ int CrawlPage(WebPage *page) {
 	return 0;
 }			
 
+//Write the data file inside the target directory
 int WriteFile(WebPage *page, char *targetdirectory, int filenumber) {
 	char file[10000];
 	char numconverted[10000];
 	strcpy(file, targetdirectory);
 	sprintf(numconverted, "%d", filenumber);
 	strcat(file, numconverted);
+
 	FILE *fp;
 	fp = fopen(file, "w");
 	fprintf(fp, page->url);
