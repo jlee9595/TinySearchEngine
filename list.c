@@ -63,10 +63,6 @@ WebPage *PopList() {
 
 	if (URLList.head)
 		URLList.head->prev = NULL;
-	free(page->url);
-	free(page->html);
-	free(page);
-	free(tmp);
 
 	return page;
 
