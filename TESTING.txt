@@ -1,9 +1,0 @@
-TESTING
-
-I tested my solution by creating the file, crawlerTest.sh. This file runs my program with various different parameters, both valid and invalid and at different depths. The specific different parameters used can be seen inside the test script itself.
-
-I did not include any testing procedures in my Makefile, and instead just ran the script myself when I wanted to test it.
-
-The output of my test script goes to a file marked with the date in the format, "crawlerTestlog.[DATE]"
-
-Final note: While the test log states that the final data files are left for the user, they are not included in the initial submission since the instructions state not to include them. They will however be left behind if the script is run again.
