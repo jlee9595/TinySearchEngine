@@ -81,6 +81,45 @@ int AddToHashTable(char *word) {
 	return 0;
 }
 
+int UpdateHashTable(char *word, int DocumentId) {
+	if (InHashTable(word) == 0) {
+		AddToHashTable(word);
+	}
+	HashTableNode *node = WordsFound.table[JenkinsHash(word, MAX_HASH_SLOT)];
+	while (strcmp(node->word, word) != 0) {
+		node = node->next;
+	}
+	DocumentNode *currentDocNode = node->page;
+	
+	if (currentDocNode == NULL) {
+		DocumentNode *newDocNode = calloc(1, sizeof(DocumentNode));
+		newDocNode->doc_id = DocumentId;
+		newDocNode->freq = 1;
+		node->page = newDocNode;
+		return 0;
+	}
+
+	while ( currentDocNode->next != NULL ) {
+		if (currentDocNode->doc_id == DocumentId) {
+			currentDocNode->freq++;
+			return 0;
+		}
+		currentDocNode = currentDocNode->next;
+	}
+	
+	if (currentDocNode->doc_id == DocumentId) {
+		currentDocNode->freq++;
+		return 0;
+	}
+
+	DocumentNode *newDocNode = calloc(1, sizeof(DocumentNode));
+	newDocNode->doc_id = DocumentId;
+	newDocNode->freq = 1;
+	currentDocNode->next = newDocNode;
+	return 1;
+}
+	
+
 //Check if the input url is inside the Hash Table
 int InHashTable(char *word) {
 	unsigned long bucket = JenkinsHash(word, MAX_HASH_SLOT);

@@ -17,10 +17,18 @@
 
 // ---------------- Structures/Types
 
+typedef struct DocumentNode {
+        struct DocumentNode *next;
+        int doc_id;
+        int freq;
+} DocumentNode;
+
 typedef struct HashTableNode {
-    char *word;                               // word previously seen
+    char *word;
+	DocumentNode *page;                               // word previously seen
     struct HashTableNode *next;              // pointer to next node
 } HashTableNode;
+
 
 typedef struct HashTable {
     HashTableNode *table[MAX_HASH_SLOT];     // actual hashtable
@@ -44,6 +52,8 @@ extern HashTable WordsFound;
 unsigned long JenkinsHash(const char *str, unsigned long mod);
 
 int AddToHashTable(char *word);
+
+int UpdateHashTable(char *word, int DocumentId);
 
 int InHashTable(char *word);
 
