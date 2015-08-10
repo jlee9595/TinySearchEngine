@@ -106,15 +106,20 @@ HashTable *ReadFile(char *file) {
 	return reloadedIndex;	
 }
 	
-//int main() {
-//
-	//char *doc = LoadDocument("test.txt");
-//	char *doc = LoadDocument("/net/tahoe3/jlee/cs50/labs/lab5/crawler/target/3");
-//	printf("%s", doc);
-//}
 
 
 int main(int argc, char* argv[]) {
+	if (argc < 3 || argc > 4) {
+		printf("too many or too little arguments, please try again");
+		exit(0);
+	}
+	
+	if (!IsDir(argv[1])) {
+		printf("invalid directory, please try again");
+		exit(0);
+	}
+	
+	
 	int docId;
 	int pos;
 	char *word;

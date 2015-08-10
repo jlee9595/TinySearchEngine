@@ -17,3 +17,8 @@ $(OBJS): $(SRCS)
 debug: $(SRCS)
 	$(CC) $(CFLAGS) -g -ggdb -c $(SRCS)
 	$(CC) $(CFLAGS) -g -ggdb -o $(EXEC) $(OBJS)
+
+clean: 
+	rm -f *.o
+	rm -f *.dat
+

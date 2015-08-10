@@ -146,6 +146,7 @@ int FreeHashTable(HashTable *WordsFound) {
 		}
 		currentBucket++;
 	}
+	free(WordsFound);
 	return 0;
 }
 
