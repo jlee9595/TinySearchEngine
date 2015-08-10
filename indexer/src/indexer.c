@@ -46,12 +46,12 @@ char *LoadDocument(char *fileName) {
 	return html;
 }
 
-int SaveIndexToFile(char *file) {
+int SaveIndexToFile(char *file, HashTable *WordsFound) {
 	FILE *fp;
 	fp = fopen(file, "w");
 	int hashIndex = 0;
 	while (hashIndex <= MAX_HASH_SLOT) {
-		HashTableNode *currentNode = WordsFound.table[hashIndex];
+		HashTableNode *currentNode = WordsFound->table[hashIndex];
 		while (currentNode != NULL) {
 			fprintf(fp,"%s ", currentNode->word);
 			int docCount = 0;
@@ -74,7 +74,37 @@ int SaveIndexToFile(char *file) {
 	fclose(fp);
 	return 0;
 }			
-	
+
+HashTable *ReadFile(char *file) {
+	HashTable *reloadedIndex = calloc(1, sizeof(HashTable));
+	FILE *fp;
+	fp = fopen(file, "r");
+	char *line = calloc(1, sizeof(char));
+	char *token = calloc(1, sizeof(char));
+	while (fgets(line, INT_MAX, fp) != NULL) {
+		line = strtok(line, "\n");
+		char *word = calloc(1, sizeof(char));	
+		char *doc_id = calloc(1, strlen(line));
+		char *freq = calloc(1, strlen(line));
+		token = strtok(line, " ");
+		strcpy(word, token);
+		doc_id = strtok(NULL, " ");
+		doc_id = strtok(NULL, " ");
+		while (doc_id != NULL) {
+			freq = strtok(NULL, " ");
+			int doc_id2 = atoi(doc_id);
+			int freq2 = atoi(freq);
+			int i = 0;
+			while (i < freq2) {
+				UpdateHashTable(word, doc_id2, reloadedIndex);
+				i++;
+			}
+			doc_id = strtok(NULL, " ");
+		}
+	}
+	fclose(fp);	
+	return reloadedIndex;	
+}
 	
 //int main() {
 //
@@ -91,6 +121,7 @@ int main(int argc, char* argv[]) {
 	char *doc;
 	char **filenames = NULL;
 	int num_files = 0;
+	HashTable *WordsFound = calloc(1, sizeof(HashTable));
 	num_files = GetFilenamesInDir(argv[1], &filenames);
 	if (num_files < 0) {
 		printf("failed to get any filenames");
@@ -105,8 +136,13 @@ int main(int argc, char* argv[]) {
 		
 		pos = 0;
 		while ((pos = GetNextWord(doc, pos, &word)) > 0)
-			UpdateHashTable(word, docId);
+			UpdateHashTable(word, docId, WordsFound);
 	}
-
-	SaveIndexToFile(argv[2]);
+	SaveIndexToFile(argv[2], WordsFound);
+	FreeHashTable(WordsFound);
+	if (argc == 4) {
+		HashTable *ReloadedIndex = ReadFile(argv[2]);
+		SaveIndexToFile(argv[3], ReloadedIndex);
+	}
+	return 0;
 }

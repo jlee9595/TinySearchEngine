@@ -35,7 +35,7 @@ typedef struct HashTable {
 } HashTable;
 
 // ---------------- Public Variables
-extern HashTable WordsFound;
+//extern HashTable WordsFound;
 
 
 // ---------------- Prototypes/Macros
@@ -51,11 +51,11 @@ extern HashTable WordsFound;
  */
 unsigned long JenkinsHash(const char *str, unsigned long mod);
 
-int AddToHashTable(char *word);
+int AddToHashTable(char *word, HashTable *WordsFound);
 
-int UpdateHashTable(char *word, int DocumentId);
+int UpdateHashTable(char *word, int DocumentId, HashTable *WordsFound);
 
-int InHashTable(char *word);
+int InHashTable(char *word, HashTable *WordsFound);
 
-int FreeHashTable();
+int FreeHashTable(HashTable *WordsFound);
 #endif // HASHTABLE_H

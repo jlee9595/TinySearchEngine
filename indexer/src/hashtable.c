@@ -32,7 +32,7 @@
 // ---------------- Private variables
 
 // ---------------- Public variables
-HashTable WordsFound;
+//HashTable WordsFound;
 
 
 // ---------------- Private prototypes
@@ -59,7 +59,7 @@ unsigned long JenkinsHash(const char *str, unsigned long mod)
 }
 
 // Add the input URL to the hash table
-int AddToHashTable(char *word) {
+int AddToHashTable(char *word, HashTable *WordsFound) {
 	HashTableNode *node;
 	if ((node = calloc(1, sizeof(HashTableNode))) == NULL) {
 		return 1;
@@ -68,24 +68,24 @@ int AddToHashTable(char *word) {
 	unsigned long hashIndex = JenkinsHash(word, MAX_HASH_SLOT);
 	
 	HashTableNode *currentNode;
-	currentNode = WordsFound.table[hashIndex];
+	currentNode = WordsFound->table[hashIndex];
 	if (currentNode == NULL) {
-		WordsFound.table[hashIndex] = node;
+		WordsFound->table[hashIndex] = node;
 	}
 	else {
 		while (currentNode->next != NULL) {
-			currentNode = currentNode->next;
+		currentNode = currentNode->next;
 		}
-		currentNode->next = node;
+	currentNode->next = node;
 	}
 	return 0;
 }
 
-int UpdateHashTable(char *word, int DocumentId) {
-	if (InHashTable(word) == 0) {
-		AddToHashTable(word);
+int UpdateHashTable(char *word, int DocumentId, HashTable *WordsFound) {
+	if (InHashTable(word, WordsFound) == 0) {
+		AddToHashTable(word, WordsFound);
 	}
-	HashTableNode *node = WordsFound.table[JenkinsHash(word, MAX_HASH_SLOT)];
+	HashTableNode *node = WordsFound->table[JenkinsHash(word, MAX_HASH_SLOT)];
 	while (strcmp(node->word, word) != 0) {
 		node = node->next;
 	}
@@ -121,10 +121,10 @@ int UpdateHashTable(char *word, int DocumentId) {
 	
 
 //Check if the input url is inside the Hash Table
-int InHashTable(char *word) {
+int InHashTable(char *word, HashTable *WordsFound) {
 	unsigned long bucket = JenkinsHash(word, MAX_HASH_SLOT);
 	HashTableNode *currentNode;
-	currentNode = WordsFound.table[bucket];
+	currentNode = WordsFound->table[bucket];
 	while (currentNode != NULL) {
 		if (strcmp(currentNode->word, word) == 0) {
 			return 1;
@@ -135,14 +135,14 @@ int InHashTable(char *word) {
 }
 
 // Free the memory allocated to the hash table nodes
-int FreeHashTable() {
+int FreeHashTable(HashTable *WordsFound) {
 	int currentBucket = 0;
 	while (currentBucket <=  MAX_HASH_SLOT) {
-		HashTableNode *currentNode = WordsFound.table[currentBucket];
+		HashTableNode *currentNode = WordsFound->table[currentBucket];
 		while (currentNode != NULL) {
-			//HashTableNode *tempNode = currentNode;
+			HashTableNode *tempNode = currentNode;
 			currentNode = currentNode->next;
-			//free(tempNode);	
+			free(tempNode);	
 		}
 		currentBucket++;
 	}
