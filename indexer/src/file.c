@@ -14,7 +14,7 @@
                                              // of the bsd extensions, but
                                              // it makes it easier to test file
                                              // types
-
+#define _DEFAULT_SOURCE
 // ---------------- Open Issues
 
 // ---------------- System includes e.g., <stdio.h>

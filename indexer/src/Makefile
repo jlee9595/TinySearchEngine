@@ -21,4 +21,5 @@ debug: $(SRCS)
 clean: 
 	rm -f *.o
 	rm -f *.dat
+	rm -f *.log
 

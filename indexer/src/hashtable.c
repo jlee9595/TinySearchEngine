@@ -82,16 +82,16 @@ int AddToHashTable(char *word, HashTable *WordsFound) {
 }
 
 int UpdateHashTable(char *word, int DocumentId, HashTable *WordsFound) {
-	if (InHashTable(word, WordsFound) == 0) {
-		AddToHashTable(word, WordsFound);
-	}
 	HashTableNode *node = WordsFound->table[JenkinsHash(word, MAX_HASH_SLOT)];
+
+	//Find the node in the slot
 	while (strcmp(node->word, word) != 0) {
 		node = node->next;
 	}
 	DocumentNode *currentDocNode = node->page;
 	
-	if (currentDocNode == NULL) {
+	//if the node doesn't have a docnode yet then make one
+	if (currentDocNode == NULL) {					
 		DocumentNode *newDocNode = calloc(1, sizeof(DocumentNode));
 		newDocNode->doc_id = DocumentId;
 		newDocNode->freq = 1;
@@ -99,6 +99,7 @@ int UpdateHashTable(char *word, int DocumentId, HashTable *WordsFound) {
 		return 0;
 	}
 
+	//Go through each docnode until the right one is found and increment its freq
 	while ( currentDocNode->next != NULL ) {
 		if (currentDocNode->doc_id == DocumentId) {
 			currentDocNode->freq++;
@@ -107,11 +108,13 @@ int UpdateHashTable(char *word, int DocumentId, HashTable *WordsFound) {
 		currentDocNode = currentDocNode->next;
 	}
 	
+	//Check the last one as well because the while loop didn't reach it
 	if (currentDocNode->doc_id == DocumentId) {
 		currentDocNode->freq++;
 		return 0;
 	}
 
+	//If the node had a docnode list and the doc wasn't in there then make a new one
 	DocumentNode *newDocNode = calloc(1, sizeof(DocumentNode));
 	newDocNode->doc_id = DocumentId;
 	newDocNode->freq = 1;
@@ -137,11 +140,24 @@ int InHashTable(char *word, HashTable *WordsFound) {
 // Free the memory allocated to the hash table nodes
 int FreeHashTable(HashTable *WordsFound) {
 	int currentBucket = 0;
-	while (currentBucket <=  MAX_HASH_SLOT) {
+
+	//Go through all the hash slots
+	while (currentBucket <  MAX_HASH_SLOT) {
 		HashTableNode *currentNode = WordsFound->table[currentBucket];
+		
+		//Go through all the nodes in the slot
 		while (currentNode != NULL) {
 			HashTableNode *tempNode = currentNode;
 			currentNode = currentNode->next;
+			DocumentNode* currentDocNode = tempNode->page;
+
+			//Go through all the document nodes in the node
+			while (currentDocNode != NULL) {
+				DocumentNode *tempDocNode = currentDocNode;
+				currentDocNode = currentDocNode->next;
+				free(tempDocNode);
+			}
+			free(tempNode->word);
 			free(tempNode);	
 		}
 		currentBucket++;

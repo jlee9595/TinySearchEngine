@@ -1,0 +1,13 @@
+README
+
+The only 2 out of the ordinary assumption that my indexer makes is that when the user enters the directory as a parameter that it ends in a / and that the file(s) entered as parameters afterwards are either empty or do not exist
+
+Example of a good input: indexer ./target/ index.dat index2.dat
+
+Example of a bad input: indexer ./target index.dat index2.dat
+
+I have included 2 testing directories: target and target2.
+target contains the output of a crawler depth 1 on http://old-www.cs.dartmouth.edu/~cs50/tse/
+target2 contains the output of a crawler depth 2 on http://old-www.cs.dartmouth.edu/~cs50/tse/
+
+In my BATS file I have only run tests on target but the user is welcome to test on target2 or any other directory of their choosing.

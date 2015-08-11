@@ -18,20 +18,20 @@
 // ---------------- Structures/Types
 
 typedef struct DocumentNode {
-        struct DocumentNode *next;
-        int doc_id;
-        int freq;
+        struct DocumentNode *next;		//pointer to  next node
+        int doc_id;				// id of file
+        int freq;				//frequency with which the word comes up in the file
 } DocumentNode;
 
 typedef struct HashTableNode {
-    char *word;
-	DocumentNode *page;                               // word previously seen
-    struct HashTableNode *next;              // pointer to next node
+	char *word;				//word that the node holds
+	DocumentNode *page;                     //first documentnode associated with word
+    	struct HashTableNode *next;             // pointer to next node
 } HashTableNode;
 
 
 typedef struct HashTable {
-    HashTableNode *table[MAX_HASH_SLOT];     // actual hashtable
+	HashTableNode *table[MAX_HASH_SLOT];	//Inverted Index
 } HashTable;
 
 // ---------------- Public Variables

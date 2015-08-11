@@ -1,0 +1,129 @@
+Formal Documentation: Indexer
+
+Design Specification
+
+(1) *Input*
+
+Command Input
+
+./indexer [DIRECTORY TO INDEX] [FILE TO STORE INDEX DATA] [FILE TO STORE RELOADED INDEX DATA]
+
+Example command input
+
+indexer ./target/ index.dat newindex.dat
+
+[DIRECTORY TO INDEX] ./target/
+Requirement: The directory must exist and contain valid files to index
+Usage: The indexer needs to inform the user if the directory doesn't exist
+
+[FILE TO STORE INDEX DATA] index.dat
+Requirement: The file must be clear/not exist for the output to be reliable
+
+[FILE TO STORE RELOADED INDEX DATA]
+Requirement: The file must be clear/not exist for the output to be reliable
+
+(2) *Output*
+
+The Indexer will output the file specified in the second argument, which will contain the data of an inverted index, which contains words found, how many documents contained them, as well as the id of each doc that contains it and the frequency in which it occured in that document.
+Example: include 3 2 3 4 1 5 2
+
+If the 3rd argument is given, then the Indexer will also output the results of reloading the file given by the second argument in the same format.
+
+(3) *Data Flow*
+
+The contents of each file in the target directory are read and parsed for words. When a word is found, the indexer checks to see if it is in the index already. If it is, the indexer checks if there is a document node for that document. If there is, the frequency number for that file is incremented. If not then a new document node is made for the word. If the word was never in the index then a new node is made for it in the index as well as a document node for that document.
+
+Once the index has been finished, its contents are written in a readable format to the file specified in the second argument.
+
+If there is a third argument specified then the file then reads back the file outputted and 'reloads' a new hashtable (invered index) from that file, and then outputs a file in a readable format representing that reloaded index.
+
+(4) *Data Structures*
+
+	HashTable structure is our inverted index, holds hashtable nodes
+
+	HashTableNode structure holds the word, first DocumentNode, and a pointer to the next HashTableNode.
+
+	DocumentNode structure holds the docid, frequency, and a pointer to the next document node
+
+(5) *Indexer* Pseudocode
+
+//check command line arguments
+
+//Initialize data structures / variables
+
+//for each file in the directory
+	//load the html from the file
+
+	//get the id of the file
+
+	//parse html for words
+
+	//while there are words left to parse
+		//get the next word in the html
+		
+		//if it is not in the index then add it and give it a document node
+
+		//if it is then check whether it has a document node. if so then just update the frequency. if not then add a document node.
+
+//write the index in a readable format to the file given in the second argument
+
+STOP HERE IF ONLY 2 ARGUMENTS GIVEN
+
+//read the contents of the output file and reload a new index from that data
+
+//output a new file that reads the data from the reloaded hash table
+
+
+**Indexer Implementation Spec**
+(1) Prototype Definitions
+
+HashTable Functions
+
+unsigned long JenkinsHash(const char *str, unsigned long mod);
+
+int AddToHashTable(char *word, HashTable *WordsFound);
+
+int UpdateHashTable(char *word, int DocumentId, HashTable *WordsFound);
+
+int InHashTable(char *word, HashTable *WordsFound);
+
+int FreeHashTable(HashTable *WordsFound);
+
+File Functions
+
+int IsDir(const char *path);
+
+int isFile(const char *path);
+
+int GetFilenamesInDir(const char *dir, char ***filenames);
+
+Web functions
+
+int GetNextWord(const char *doc, int pos, char **word);
+
+void NormalizeWord(char *word);
+
+Important Constants
+
+#define MAX_HASH_SLOT 10000
+
+(2) Data Structures and Variables
+
+typedef struct DocumentNode {
+        struct DocumentNode *next;              //pointer to  next node
+        int doc_id;                             // id of file
+        int freq;                               //frequency with which the word comes up in the file
+} DocumentNode;
+
+typedef struct HashTableNode {
+        char *word;                             //word that the node holds
+        DocumentNode *page;                     //first documentnode associated with word
+        struct HashTableNode *next;             // pointer to next node
+} HashTableNode;
+
+
+typedef struct HashTable {
+        HashTableNode *table[MAX_HASH_SLOT];    //Inverted Index
+} HashTable;
+
+
