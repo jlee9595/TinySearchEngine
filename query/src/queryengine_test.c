@@ -94,11 +94,6 @@ List *search(char *user_input, InvertedIndex *index) {
                 }
                 free(word);
         }
-        ListNode *currentListNode = URLList->head;
-        while (currentListNode != NULL) {
-                printf("%d, %d\n", currentListNode->doc_id, currentListNode->score);
-                currentListNode = currentListNode->next;
-        }
         return URLList;
 }
 
@@ -154,10 +149,34 @@ int TestPrintResults1() {
 	END_TEST_CASE;
 }
 
+int TestBoth() {
+	InvertedIndex *index = ReadFile("index.dat");
+	printf("\nTest: search for cat\n");
+	char *user_input = calloc(1000, sizeof(char));
+	strcpy(user_input, "cat");
+	PrintResults(search(user_input, index), "./target/");
+	
+	printf("\nTest: search for cat and dartmouth\n");
+	strcpy(user_input, "cat and dartmouth");
+	PrintResults(search(user_input, index), "./target/");
+
+	printf("\nTest: search for cat AND dartmouth\n");
+	strcpy(user_input, "cat AND dartmouth");
+	PrintResults(search(user_input, index), "./target/");
+
+	printf("\nTest: search for cat OR dartmouth\n");
+	strcpy(user_input, "cat OR dartmouth");
+	PrintResults(search(user_input, index), "./target/");
+
+	return 0;
+}
+
 int main(int argc, char** argv) {
 	int cnt = 0;	
 	RUN_TEST(Testsearch1, "search Test case 1");
 	RUN_TEST(TestPrintResults1, "PrintResults Test case 1");
+	
+	TestBoth();
 
 	if (!cnt) {
 		printf("All passed!\n");
