@@ -1,0 +1,138 @@
+Formal Documentation: Query
+
+Design Specification
+
+(1) *Input*
+
+Command Input
+
+./query [INDEX FILE] [CRAWLER OUTPUT FOLDER]
+
+Example command input
+
+./query index.dat ./target/
+
+[INDEX FILE] index.dat
+Requirement: The file must exist and be a valid representation of an inverted index
+Usage: The indexer needs to inform the user if the file doesn't exist
+
+[CRAWLER OUTPUT FOLDER]
+Requirement: The folder must exist and contain the output of the crawler program
+
+(2) *Output*
+
+The query will result in a command line interface where the user can input search terms
+
+(3) *Data Flow*
+
+The query will take a user input, parse it for words, storing them in an array. For each word, the query will search the inverted index for them, and each doc that contains it is added to a doubly linked list of doc id's. Each doc in this list has a 'score' that represents how many times a word has been found in its contents. If the doc has already been found, then its score is updated using the frequency in the inverted index. Once all the words have been searched, then a function takes the list and searches for the doc with the highest score. It takes this doc and translates its doc_id to its url using the crawler folder and prints the doc_id and url. It then removes it from the list and repeates the process until there are no more docs left in the list. The query finally resets and waits for user input again.
+
+(4) *Data Structures*
+
+	InvertedIindex structure is our inverted index, holds nodes
+
+	InvertedIndexNode structure holds the word, first DocumentNode, and a pointer to the next HashTableNode.
+
+	DocumentNode structure holds the docid, frequency, and a pointer to the next document node
+
+	List structure is our doubly linked list, holds listnodes
+
+	ListNode structure holds doc_id, score
+
+(5) *Query* Pseudocode
+
+//check command line arguments
+
+//Initialize data structures / variables
+
+//Read index and reload it
+
+//BEGIN ENDLESS LOOP
+
+//Take user input and parse it, store in array
+
+//For each word
+	//search inverted index for it
+	//add each doc that contains it to doubly linked list and update 'scores'
+
+//For each doc in the list
+	//Find the highest score doc
+	//Translate it to url
+	//print url and doc_id
+	//Remove it
+	//Repeat
+
+//Repeat loop
+
+**Indexer Implementation Spec**
+(1) Prototype Definitions
+
+HashTable Functions
+
+unsigned long JenkinsHash(const char *str, unsigned long mod);
+
+
+File Functions
+
+int IsDir(const char *path);
+
+int isFile(const char *path);
+
+
+Web functions
+
+void NormalizeWord(char *word);
+
+InvertedIndex Functions
+
+int AddToInvertedIndex(char *word, InvertedIndex *WordsFound);
+
+int UpdateInvertedIndex(char *word, int DocumentId, InvertedIndex *WordsFound);
+
+int InInvertedIndex(char *word, InvertedIndex *WordsFound);
+
+InvertedIndex *ReadFile(char *file);
+
+int FreeInvertedIndex(InvertedIndex *WordsFound);
+
+List functions
+
+int AppendList(int doc_id, List *URLList);
+
+int PopList(int doc_id, List *URLList);
+
+Important Constants
+
+#define MAX_HASH_SLOT 10000
+
+(2) Data Structures and Variables
+
+typedef struct DocumentNode {
+        struct DocumentNode *next;              //pointer to  next node
+        int doc_id;                             // id of file
+        int freq;                               //frequency with which the word comes up in the file
+} DocumentNode;
+
+typedef struct InvertedIndexNode {
+	char *word;				//word that the node holds
+	DocumentNode *page;                     //first documentnode associated with word
+    	struct InvertedIndexNode *next;             // pointer to next node
+} InvertedIndexNode;
+
+
+typedef struct InvertedIndex {
+	InvertedIndexNode *table[MAX_HASH_SLOT];	//Inverted Index
+} InvertedIndex;
+
+typedef struct ListNode {
+    int doc_id;
+	int score;                           // the data for a given page
+    struct ListNode *prev;                   // pointer to previous node
+    struct ListNode *next;                   // pointer to next node
+} ListNode;
+
+typedef struct List {
+    ListNode *head;                          // "beginning" of the list
+    ListNode *tail;                          // "end" of the list
+} List;
+

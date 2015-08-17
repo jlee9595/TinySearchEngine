@@ -1,0 +1,16 @@
+README
+
+The only out of the ordinary assumption that my query mkaes is that when the user enters the directory as a paremeter that it ends in a /.
+
+Example of a good input: query index.dat ./target/
+Example of bad input: query index.dat ./target
+
+I have included a "target" testing directory and index.dat file in the src folder to be used by the queryengine_test.c file. These files should not be deleted.
+In my queryengine_test.c file I test the two functions I have created to aid my main function. Rather than "including" them, I chose to copy and paste them directly into the testing file. 
+To use the queryengine_test.c file, call "make test" in the query/src directory.
+This testing file tests a couple situations and also tests different inputs into the command line for query.
+
+The QEBATS.sh file simply puts the crawler, indexer, and query together and lets the user test at his leisure at the end.
+
+In my implementation of OR, I chose to simply mimic the implementation of AND as one of the TAs specified that we could do on Piazza.
+
