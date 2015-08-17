@@ -137,6 +137,52 @@ int InHashTable(char *word, HashTable *WordsFound) {
 	return 0;
 }
 
+
+//Reads an inverted index file and recreates the data structure it represents
+HashTable *ReadFile(char *file) {
+	HashTable *reloadedIndex = calloc(1, sizeof(HashTable));			//allocate new index
+	FILE *fp;
+
+	fp = fopen(file, "r");								//open the input file
+	char *line = calloc(100000, sizeof(char));
+
+	//read the file line by line, parsing each line for the word, docids and freqs
+	while (fgets(line, INT_MAX, fp) != NULL) {					
+		line = strtok(line, "\n");
+		char *token;
+		char *word = calloc(100, sizeof(char));	
+		token = strtok(line, " ");
+		strcpy(word, token);
+		token = strtok(NULL, " ");
+		token = strtok(NULL, " ");
+		
+		//once word has been parsed and doccount has been skipped, start reading the docids and freqs until the end of the line
+		while (token != NULL) {
+			int doc_id = atoi(token);
+			token = strtok(NULL, " ");
+			int freq = atoi(token);
+			int i = 0;
+			
+			//increment the frequency as many times as needed
+			while (i < freq) {
+				if (InHashTable(word, reloadedIndex) == 0) {
+					AddToHashTable(word, reloadedIndex);
+					UpdateHashTable(word, doc_id, reloadedIndex);
+				}
+				else {
+					UpdateHashTable(word, doc_id, reloadedIndex);
+				}
+				i++;
+			}
+			token = strtok(NULL, " ");
+		}
+		free(token);
+	}
+	free(line);
+	fclose(fp);	
+	return reloadedIndex;	
+}
+
 // Free the memory allocated to the hash table nodes
 int FreeHashTable(HashTable *WordsFound) {
 	int currentBucket = 0;

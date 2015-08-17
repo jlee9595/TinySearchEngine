@@ -2,14 +2,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <limits.h>
-#include "../../util/hashtable.h"
-#include "../../util/invertedIndex.h"
-#include "../../util/list.h"
+#include "hashtable.h"
+#include "invertedIndex.h"
+#include "list.h"
 #include "../../util/web.h"
 #include "../../util/file.h"
 
 List *search(char *user_input, char *crawlerdir, InvertedIndex *index) {
-	//populate word array
 	List *URLList = calloc(1, sizeof(URLList));;
 	char *wordArray[1000];
 	char *token;
@@ -22,6 +21,7 @@ List *search(char *user_input, char *crawlerdir, InvertedIndex *index) {
 		token = strtok(NULL, " ");
 		i++;
 	}
+	free(token);
 	
 	int c;
 	for (c=0; c<i; c++) {
@@ -54,7 +54,7 @@ List *search(char *user_input, char *crawlerdir, InvertedIndex *index) {
 				currentDocNode = currentDocNode->next;
 			}
 		}
-	//	printf("%s", wordArray[c]);
+		free(word);
 	}
 	ListNode *currentListNode = URLList->head;
 	while (currentListNode != NULL) {
@@ -88,6 +88,9 @@ int PrintResults(List *docList, char *crawlerdir) {
 		fgets(line, INT_MAX, fp);
 		fclose(fp);
 		printf("Document ID: %d | URL: %s", currentListNode->doc_id, line);
+		free(line);
+		free(filename);
+		free(filenum);
 		PopList(currentListNode->doc_id, docList);
 	}
 	return 0;
@@ -110,13 +113,18 @@ int main(int argc, char *argv[]) {
 	}
 	
 	InvertedIndex *index = ReadFile(argv[1]);
-	while (1) {
+	int i = 0;
+	while (i != 3) {
 		char *user_input = calloc(1000, sizeof(char));
 		printf("QUERY: ");
 		fgets(user_input, 1000, stdin);
 		user_input = strtok(user_input, "\n");
 		List *docList = search(user_input, argv[2], index);
 		PrintResults(docList, argv[2]);
+		free(docList);
+		free(user_input);
+		i++;
 	}
+	FreeInvertedIndex(index);
 	return 0;
 }
