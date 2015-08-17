@@ -18,8 +18,6 @@ cd ../..
 
 cd query/src
 make
-printf "querying...\n"
-query ../../index.dat ../../target/ 
 
 printf "\nyou may now test at your leisure. (ONCE THE WORD QUERY POPS UP! (should be about 15 seconds))\n"
 

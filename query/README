@@ -11,6 +11,7 @@ To use the queryengine_test.c file, call "make test" in the query/src directory.
 This testing file tests a couple situations and also tests different inputs into the command line for query.
 
 The QEBATS.sh file simply puts the crawler, indexer, and query together and lets the user test at his leisure at the end.
+(Please note, the indexing phase takes around 2 minutes at depth 2 so give it time)
 
 In my implementation of OR, I chose to simply mimic the implementation of AND as one of the TAs specified that we could do on Piazza.
 
