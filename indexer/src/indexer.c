@@ -1,3 +1,7 @@
+//indexer.c
+//Author: Justin Lee
+//Indexes a given target directory's pages to a queriable inverted index
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

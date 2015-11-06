@@ -1,22 +1,17 @@
 /* ========================================================================== */
 /* File: crawler.c - Tiny Search Engine web crawler
  *
- * Author:
- * Date:
+ * Author: Justin Lee
  *
- * Input:
+ * Input: [seed-url] [target directory] [depth]
  *
- * Command line options:
+ * Output: No direct output
  *
- * Output:
+ * Description: Crawler for a search enginer that crawls the seed-url unitl max depth is reached, adding pages crawled to the target directory to be used by the indexer.
  *
- * Error Conditions:
- *
- * Special Considerations:
- *
+ * Data structures used: A queue is implemented as a doubly linked list in order to keep track of the web pages to be crawled. A hashtable is used to efficiently check whether webpages have been crawled yet.
  */
 /* ========================================================================== */
-// ---------------- Open Issues
 
 // ---------------- System includes e.g., <stdio.h>
 #include <stdio.h>                           // printf
@@ -24,27 +19,17 @@
 #include <curl/curl.h>                       // curl functionality
 #include <string.h>
 #include <strings.h>
+#include <stdlib.h>
 
 // ---------------- Local includes  e.g., "file.h"
 #include "common.h"                          // common functionality
 #include "web.h"                             // curl and html functionality
 #include "list.h"                            // webpage list functionality
 #include "hashtable.h"                       // hashtable functionality
-#include "utils.h"                           // utility stuffs
-// ---------------- Constant definitions
-
-// ---------------- Macro definitions
-
-// ---------------- Structures/Types
-
-// ---------------- Private variables
-
-// ---------------- Private prototypes
-
 /* ========================================================================== */
 
 
-//Crawl the page searching for URLs and adding them to the List if they havne't been visited yet
+//Crawl the page searching for URLs and adding them to the List if they haven't been visited yet 
 int CrawlPage(WebPage *page) {
 	int currentdepth = page->depth;
 	int pos = 0;
@@ -137,7 +122,7 @@ int main(int argc, char* argv[])
     // while there are urls to crawl
 	while (URLList.head != NULL) {
 		WebPage *URLToBeVisited = PopList();
-		if (GetWebPage(URLToBeVisited) != 0) {
+		if (GetWebPage(URLToBeVisited) != 0) {					//If there is another URL to visit
 			WriteFile(URLToBeVisited, argv[2], filenumber);
 			filenumber++;
 			if (URLToBeVisited->depth < maxDepth) {
@@ -146,7 +131,6 @@ int main(int argc, char* argv[])
 		}
 		free(URLToBeVisited->html);
 		free(URLToBeVisited);
-//		sleep(INTERVAL_PER_FETCH);
 	}
     // Final cleanup
 	curl_global_cleanup();

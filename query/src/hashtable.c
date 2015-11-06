@@ -2,13 +2,11 @@
 /* File: hashtable.c
  *
  * Project name: CS50 Tiny Search Engine
- * Component name: Crawler
+ * Component name: Query
  *
- * Author:
- * Date:
+ * Author: Justin Lee
  *
- * You should include in this file your functionality for the hashtable as
- * described in the assignment and lecture.
+ * Description: Contains functionality for hashtable used for Query
  */
 /* ========================================================================== */
 
@@ -24,22 +22,6 @@
 //#include "hashtable.h"                       // hashtable functionality
 
 #include "hashtable.h"
-
-// ---------------- Constant definitions
-
-// ---------------- Macro definitions
-
-// ---------------- Structures/Types
-
-
-// ---------------- Private variables
-
-// ---------------- Public variables
-
-
-// ---------------- Private prototypes
-
-
 
 unsigned long JenkinsHash(const char *str, unsigned long mod)
 {
@@ -112,11 +94,3 @@ int FreeHashTable(HashTable URLsVisited) {
 	return 0;
 }
 
-//int main() {
-//	AddToHashTable("dartmouth.edu");
-//	if (InHashTable("dartmouth.edu") == 1) {
-//		printf("Yes");
-//	}
-//	printf("%s", URLsVisited.table[JenkinsHash("dartmouth.edu", MAX_HASH_SLOT)]->url);
-//	return 0;
-//}

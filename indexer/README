@@ -10,4 +10,6 @@ I have included 2 testing directories: target and target2.
 target contains the output of a crawler depth 1 on http://old-www.cs.dartmouth.edu/~cs50/tse/
 target2 contains the output of a crawler depth 2 on http://old-www.cs.dartmouth.edu/~cs50/tse/
 
+To build: run 'make' in src
+
 In my BATS file I have only run tests on target but the user is welcome to test on target2 or any other directory of their choosing.

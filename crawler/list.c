@@ -2,6 +2,8 @@
  * Project name: CS50 Tiny Search Engine
  * Component name: Crawler
  *
+ * Author: Justin Lee
+ *
  * This file contains the implementation of the functions in list.h
  *
  */
@@ -42,9 +44,6 @@ int AppendList(WebPage *page) {
 }
 
 //Remove a webpage from the list
-//free(web->url);
-//free(web->html);
-//free(web)
 WebPage *PopList() {
 	WebPage *page;
 	ListNode *tmp;
@@ -68,18 +67,3 @@ WebPage *PopList() {
 	return page;
 }
 
-//int main() {
-//	WebPage *page;
-//	page = calloc(1, sizeof(WebPage));
-//	page->url = "dartmouth.edu";
-//	if (!URLList.head)
-//                printf("List is empty");
-//	AppendList(page);
-//	if (!URLList.head)
-//                printf("List is empty");
-//	printf("%s", URLList.tail->page->url);
-//	
-//	PopList();
-//	if (!URLList.head)
-//		printf("List is empty");
-//}
