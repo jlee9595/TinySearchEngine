@@ -1,4 +1,7 @@
 *.gch
 indexer
+query
 crawler
 *.o
+target
+*.dat

@@ -6,7 +6,7 @@ Before running, install GNU make: https://www.gnu.org/software/make/
 
 To run the search engine, run 'QEBATS.sh'.
 
-Note: Expect to wait for a few minutes for the indexing process to complete.
+Note: Expect to wait for a few minutes for the indexing process to complete at depths higher than 1.
 
 # A quick summary of how the engine works:
 

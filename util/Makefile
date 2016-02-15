@@ -17,4 +17,4 @@ debug: $(SRCS)
 	$(CC) $(CFLAGS) -g -ggdb -c $(SRCS)
 
 clean:
-	 rm *.o
+	 rm *.o libtseutil.a
