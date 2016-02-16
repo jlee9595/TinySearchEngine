@@ -19,7 +19,7 @@ cd ../..
 cd query/src
 make
 
-printf "\nyou may now test at your leisure."
+printf "\nyou may now test at your leisure.\n"
 
 ./query ../../index.dat ../../target/
 
